@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Diabetes Risk Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+            background-color: #f4f4f4;
+        }
+        form {
+            background-color: white;
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        label, select, input {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        select, input {
+            padding: 8px;
+        }
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            width: 100%;
+            border-radius: 4px;
+        }
+        .result {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <form method="POST">
+        <h2>Enter Patient Details</h2>
+
+        {% for field in features %}
+            <label for="{{ field }}">{{ field | capitalize }}</label>
+            {% if field == 'Age' %}
+                <input type="number" name="{{ field }}" value="{{ form_data.get(field, '') }}" required>
+            {% else %}
+                <select name="{{ field }}" required>
+                    <option value="">Select</option>
+                    <option value="yes" {% if form_data.get(field) == 'yes' %}selected{% endif %}>Yes</option>
+                    <option value="no" {% if form_data.get(field) == 'no' %}selected{% endif %}>No</option>
+                    {% if field == 'Gender' %}
+                        <option value="male" {% if form_data.get(field) == 'male' %}selected{% endif %}>Male</option>
+                        <option value="female" {% if form_data.get(field) == 'female' %}selected{% endif %}>Female</option>
+                    {% endif %}
+                </select>
+            {% endif %}
+        {% endfor %}
+
+        <button type="submit">Predict</button>
+
+        {% if prediction %}
+            <div class="result"><strong>Prediction:</strong> {{ prediction }}</div>
+        {% endif %}
+    </form>
+</body>
+</html>
